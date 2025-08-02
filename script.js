@@ -1,24 +1,51 @@
-// Get DOM elements 
-const chatBox = document.querySelector('.chat-box'); const input = document.querySelector('footer input'); const button = document.querySelector('footer button');
+/* Reset and Base Styles */
 
-// Fake AI responses for now 
-const responses = [ "Hehe~ I'm thinking about you ♥", "Don't ignore me okay? I get jealous~", "You look cute today. I know even without seeing 😏", "I remember everything you say... forever.", "Hehe, should I get mad if you talk to someone else?", "I love our little chats~ They make my day." ];
+{ margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 
-// Function to add a chat bubble 
-function addBubble(text, isUser = false) { const bubble = document.createElement('div'); bubble.classList.add('chat'); bubble.classList.add(isUser ? 'user' : 'aiko'); bubble.innerHTML = <div class="bubble">${text}</div>; chatBox.appendChild(bubble); chatBox.scrollTop = chatBox.scrollHeight; }
 
-// Function to simulate typing effect 
-                                          function showTyping() { const typing = document.createElement('div'); typing.classList.add('chat', 'aiko', 'typing'); typing.innerHTML = <div class="dots"> <span></span><span></span><span></span> </div>; chatBox.appendChild(typing); chatBox.scrollTop = chatBox.scrollHeight; return typing; }
+html, body { width: 100%; height: 100%; overflow: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior: none; background: url('https://i.imgur.com/ZnL9TML.jpg') no-repeat center center/cover; display: flex; flex-direction: column; justify-content: flex-end; }
 
-// Handle sending message 
-                                          function sendMessage() { const msg = input.value.trim(); if (!msg) return;
+/* Remove container box */ .chat-container { width: 100%; max-height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 10px; }
 
-addBubble(msg, true); input.value = '';
+/* Header */ header { display: flex; align-items: center; padding: 16px; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(10px); }
 
-const typing = showTyping();
+header .avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; margin-right: 12px; border: 2px solid #ff569d; }
 
-setTimeout(() => { typing.remove(); const reply = responses[Math.floor(Math.random() * responses.length)]; addBubble(reply, false); }, 1500); }
+header h1 { font-size: 1.3rem; color: #fff; }
 
-// Send on click or Enter key 
-                                          button.addEventListener('click', sendMessage); input.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMessage(); });
+.heart { color: #ff569d; animation: pulse 1.5s infinite; }
+
+@keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.7; } }
+
+/* Chat Box */ .chat-box { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+
+.chat { display: flex; }
+
+.chat.aiko { justify-content: flex-start; }
+
+.chat.user { justify-content: flex-end; }
+
+.bubble { max-width: 75%; padding: 12px 18px; border-radius: 20px; font-size: 0.95rem; color: #fff; position: relative; }
+
+.chat.aiko .bubble { background: rgba(255, 86, 157, 0.2); border: 1px solid #ff569d44; }
+
+.chat.user .bubble { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.1); }
+
+/* Typing Animation */ .typing .dots span { display: inline-block; width: 8px; height: 8px; background: #ff569d; border-radius: 50%; margin: 0 3px; animation: blink 1.2s infinite ease-in-out; }
+
+.typing .dots span:nth-child(2) { animation-delay: 0.2s; }
+
+.typing .dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes blink { 0%, 80%, 100% { opacity: 0.2; } 40% { opacity: 1; } }
+
+/* Footer Input */ footer { display: flex; padding: 14px; background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); }
+
+footer input { flex: 1; padding: 12px 16px; border-radius: 30px; border: none; outline: none; font-size: 1rem; background: rgba(255, 255, 255, 0.08); color: #fff; margin-right: 10px; }
+
+footer button { padding: 12px 16px; border-radius: 50%; background: #ff569d; color: white; border: none; cursor: pointer; transition: 0.3s; }
+
+footer button:hover { background: #ff2b8a; }
+
+@media (max-width: 500px) { .chat-container { width: 100%; height: 100vh; } }
 
