@@ -1,65 +1,24 @@
-const sendBtn = document.getElementById('send-btn');
-const userInput = document.getElementById('user-input');
-const chatBox = document.getElementById('chat-box');
-const typingStatus = document.getElementById('typing-status');
+// Get DOM elements 
+const chatBox = document.querySelector('.chat-box'); const input = document.querySelector('footer input'); const button = document.querySelector('footer button');
 
-sendBtn.addEventListener('click', sendMessage);
-userInput.addEventListener('keydown', function (e) {
-  if (e.key === 'Enter') sendMessage();
-});
+// Fake AI responses for now 
+const responses = [ "Hehe~ I'm thinking about you ♥", "Don't ignore me okay? I get jealous~", "You look cute today. I know even without seeing 😏", "I remember everything you say... forever.", "Hehe, should I get mad if you talk to someone else?", "I love our little chats~ They make my day." ];
 
-function sendMessage() {
-  const msg = userInput.value.trim();
-  if (!msg) return;
-  appendMessage('user', msg);
-  userInput.value = '';
+// Function to add a chat bubble 
+function addBubble(text, isUser = false) { const bubble = document.createElement('div'); bubble.classList.add('chat'); bubble.classList.add(isUser ? 'user' : 'aiko'); bubble.innerHTML = <div class="bubble">${text}</div>; chatBox.appendChild(bubble); chatBox.scrollTop = chatBox.scrollHeight; }
 
-  typingStatus.style.display = 'block';
+// Function to simulate typing effect 
+                                          function showTyping() { const typing = document.createElement('div'); typing.classList.add('chat', 'aiko', 'typing'); typing.innerHTML = <div class="dots"> <span></span><span></span><span></span> </div>; chatBox.appendChild(typing); chatBox.scrollTop = chatBox.scrollHeight; return typing; }
 
-  setTimeout(() => {
-    const reply = getAikoResponse(msg);
-    appendTypingMessage(reply);
-    typingStatus.style.display = 'none';
-  }, 1000);
-}
+// Handle sending message 
+                                          function sendMessage() { const msg = input.value.trim(); if (!msg) return;
 
-function appendMessage(sender, text) {
-  const message = document.createElement('div');
-  message.classList.add('message', sender);
-  message.textContent = text;
-  chatBox.appendChild(message);
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
+addBubble(msg, true); input.value = '';
 
-function appendTypingMessage(text) {
-  const message = document.createElement('div');
-  message.classList.add('message', 'aiko');
-  chatBox.appendChild(message);
+const typing = showTyping();
 
-  let i = 0;
-  function type() {
-    if (i < text.length) {
-      message.textContent += text.charAt(i);
-      i++;
-      setTimeout(type, 30);
-    } else {
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-  }
-  type();
-}
+setTimeout(() => { typing.remove(); const reply = responses[Math.floor(Math.random() * responses.length)]; addBubble(reply, false); }, 1500); }
 
-function getAikoResponse(input) {
-  input = input.toLowerCase();
-  if (input.includes("hi") || input.includes("hello")) return "Hey you~ Did you miss me?";
-  if (input.includes("love")) return "I love you too, and no one else. Ever. 💗";
-  if (input.includes("friend")) return "Who's that? Do I need to get rid of them?";
-  if (input.includes("sad")) return "Aww, come here... Let me cheer you up. 💕";
-  if (input.includes("bye")) return "No! You're not leaving me... not now 😢";
-  return [
-    "Hehe~ you’re cute when you type seriously 💕",
-    "Tell me more~ I’m listening only to you.",
-    "I'll remember that... forever. ♡",
-    "Don’t even think about ignoring me~"
-  ][Math.floor(Math.random() * 4)];
-}
+// Send on click or Enter key 
+                                          button.addEventListener('click', sendMessage); input.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMessage(); });
+
