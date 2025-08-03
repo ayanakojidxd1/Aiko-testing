@@ -1,26 +1,25 @@
-const chatBox = document.getElementById('chat-box');
-const input = document.getElementById('input');
-const send = document.getElementById('send');
+const chatArea = document.getElementById("chat-area");
+const input = document.getElementById("messageInput");
+const send = document.getElementById("sendBtn");
 
-function addBubble(message, sender = 'aiko') {
-  const bubble = document.createElement('div');
-  bubble.classList.add('bubble');
-  if (sender === 'user') bubble.classList.add('user');
-  bubble.innerText = message;
-  chatBox.appendChild(bubble);
-  chatBox.scrollTop = chatBox.scrollHeight;
+function addBubble(text, sender = 'bot') {
+  const bubble = document.createElement("div");
+  bubble.classList.add("bubble", sender);
+  bubble.innerText = text;
+  chatArea.appendChild(bubble);
+  chatArea.scrollTop = chatArea.scrollHeight;
 }
 
-function aikoReply(userMsg) {
+function reply(msg) {
   const responses = [
-    "Hehe... you're so fun to talk to 💕",
-    "What are you planning now?",
-    "Do you like me that much?~",
-    "Aww, you're making me blush 😳",
-    "I'll remember that... maybe 😈"
+    "Hehe~ You're fun to chat with 💕",
+    "Do you think about me a lot?",
+    "I'll stay with you forever.",
+    "That made me smile 🥰",
+    "Hmm... tell me more~"
   ];
-  const reply = responses[Math.floor(Math.random() * responses.length)];
-  setTimeout(() => addBubble(reply, 'aiko'), 800);
+  const replyText = responses[Math.floor(Math.random() * responses.length)];
+  setTimeout(() => addBubble(replyText, 'bot'), 800);
 }
 
 send.onclick = () => {
@@ -28,7 +27,7 @@ send.onclick = () => {
   if (!msg) return;
   addBubble(msg, 'user');
   input.value = '';
-  aikoReply(msg);
+  reply(msg);
 };
 
 input.addEventListener('keypress', e => {
