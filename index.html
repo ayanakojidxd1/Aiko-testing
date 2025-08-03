@@ -3,23 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beautiful Chat App</title>
+    <title>Aiko Chat Web</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
         :root {
-            --primary-color: #6a11cb;
-            --secondary-color: #2575fc;
-            --background-color: #f0f2f5;
+            /* New Red Color Scheme */
+            --primary-color: #E53935; /* Vibrant Red */
+            --secondary-color: #B71C1C; /* Darker Red / Maroon */
+            
+            /* Other Colors */
+            --background-color: #f5f7fa;
             --chat-bg-color: #ffffff;
-            --user-message-bg: #e2f1ff;
-            --ai-message-bg: #f8f8f8;
+            --user-message-bg: #ffebee; /* Lighter red for user messages */
+            --ai-message-bg: #f8f9fa;
             --border-color: #e0e0e0;
             --text-color: #333333;
+            --text-light: #6c757d;
             --input-bg-color: #ffffff;
             --button-bg-color: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
             --button-text-color: #ffffff;
-            --shadow-color: rgba(0, 0, 0, 0.05);
+            --shadow-color: rgba(0, 0, 0, 0.08);
         }
 
         * {
@@ -30,7 +34,11 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: var(--background-color);
+            /* Use a local image file. Make sure this file is in the same folder as this HTML file. */
+            background-image: url('Aiko.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -45,26 +53,43 @@
             height: 90vh;
             max-height: 800px;
             background: var(--chat-bg-color);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px var(--shadow-color);
+            border-radius: 25px;
+            box-shadow: 0 10px 40px var(--shadow-color);
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            position: relative;
         }
 
         .chat-header {
             padding: 20px;
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: var(--button-text-color);
-            text-align: center;
-            font-weight: 600;
-            font-size: 1.25rem;
-            border-top-left-radius: 20px;
-            border-top-right-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-top-left-radius: 25px;
+            border-top-right-radius: 25px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: relative;
-            z-index: 10;
+        }
+
+        .chat-header img.avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--button-text-color);
+            animation: pulse 2s infinite;
+        }
+        
+        .chat-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255,255,255,0); }
+            100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
         }
 
         .chat-messages {
@@ -77,8 +102,28 @@
             scroll-behavior: smooth;
         }
 
+        /* Custom Scrollbar */
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #c3c3c3;
+            border-radius: 10px;
+            transition: background 0.3s;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
         .message {
-            max-width: 80%;
+            max-width: 85%;
             padding: 12px 18px;
             border-radius: 20px;
             line-height: 1.5;
@@ -86,6 +131,15 @@
             position: relative;
             animation: fadeIn 0.3s ease-out;
             font-size: 0.95rem;
+        }
+        
+        .message .timestamp {
+            display: block;
+            margin-top: 5px;
+            font-size: 0.75rem;
+            color: var(--text-light);
+            text-align: right;
+            opacity: 0.7;
         }
 
         @keyframes fadeIn {
@@ -104,6 +158,7 @@
             align-self: flex-start;
             border-bottom-left-radius: 5px;
             color: var(--text-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         .chat-input-area {
@@ -111,8 +166,8 @@
             padding: 15px 20px;
             border-top: 1px solid var(--border-color);
             background: var(--chat-bg-color);
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
+            border-bottom-left-radius: 25px;
+            border-bottom-right-radius: 25px;
             gap: 10px;
         }
 
@@ -129,7 +184,7 @@
 
         #user-input:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(106, 17, 203, 0.2);
+            box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.1);
         }
 
         #send-btn {
@@ -162,15 +217,16 @@
             padding: 12px 18px;
             border-radius: 20px;
             border-bottom-left-radius: 5px;
-            display: none;
+            display: flex;
             align-items: center;
             gap: 5px;
+            width: fit-content;
         }
 
         .typing-indicator span {
             width: 8px;
             height: 8px;
-            background: var(--text-color);
+            background: var(--text-light);
             border-radius: 50%;
             animation: bounce 1.4s infinite ease-in-out;
             opacity: 0.7;
@@ -188,15 +244,19 @@
 
     <div class="chat-container">
         <div class="chat-header">
-            AI Assistant Chat
+            <img src="avatar.png" alt="Aiko Avatar" class="avatar">
+            <div>
+                <h2>Aiko</h2>
+            </div>
         </div>
         <div class="chat-messages" id="chat-messages">
             <div class="message ai-message">
-                Hello! I am your AI assistant. How can I help you today?
+                Hello! I am Aiko, your personal AI assistant. How can I help you today?
+                <span class="timestamp">Just now</span>
             </div>
             </div>
         <div class="chat-input-area">
-            <input type="text" id="user-input" placeholder="Type your message here...">
+            <input type="text" id="user-input" placeholder="Say something to Aiko...">
             <button id="send-btn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-send">
                     <line x1="22" y1="2" x2="11" y2="13"></line>
@@ -210,65 +270,58 @@
         const chatMessages = document.getElementById('chat-messages');
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
+        let typingIndicator = null;
 
-        // Function to append a new message to the chat
+        function getCurrentTime() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            return `${hours}:${minutes}`;
+        }
+
         function appendMessage(message, sender) {
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message', `${sender}-message`);
-            messageDiv.textContent = message;
+            messageDiv.innerHTML = `
+                ${message}
+                <span class="timestamp">${getCurrentTime()}</span>
+            `;
             chatMessages.appendChild(messageDiv);
             scrollToBottom();
         }
 
-        // Function to scroll to the bottom of the chat
         function scrollToBottom() {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        // Function to simulate an AI response
+        function showTypingIndicator() {
+            if (!typingIndicator) {
+                typingIndicator = document.createElement('div');
+                typingIndicator.classList.add('typing-indicator');
+                typingIndicator.innerHTML = '<span></span><span></span><span></span>';
+                chatMessages.appendChild(typingIndicator);
+                scrollToBottom();
+            }
+        }
+
+        function hideTypingIndicator() {
+            if (typingIndicator) {
+                chatMessages.removeChild(typingIndicator);
+                typingIndicator = null;
+            }
+        }
+
         async function getAiResponse(message) {
-            // Placeholder for API call
-            // You will replace this with your actual API integration
-            // For now, it will just echo the user's message with a prefix
-
-            // Simulate typing indicator
-            const typingIndicator = document.createElement('div');
-            typingIndicator.classList.add('typing-indicator');
-            typingIndicator.innerHTML = '<span></span><span></span><span></span>';
-            chatMessages.appendChild(typingIndicator);
-            scrollToBottom();
-
-            // Simulate network delay
+            showTypingIndicator();
             await new Promise(resolve => setTimeout(resolve, 1500));
-
-            // Remove typing indicator
-            chatMessages.removeChild(typingIndicator);
+            hideTypingIndicator();
             
             // Your API call would go here
-            /*
-            try {
-                const response = await fetch('YOUR_API_ENDPOINT', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ prompt: message }),
-                });
-                const data = await response.json();
-                const aiResponse = data.response; // Adjust based on your API response
-                appendMessage(aiResponse, 'ai');
-            } catch (error) {
-                console.error('Error fetching AI response:', error);
-                appendMessage('Sorry, I am unable to process that right now.', 'ai');
-            }
-            */
-
-            // For now, use a simple echo response
-            const aiResponse = `I'm an AI. You said: "${message}". I will provide a more meaningful response once I'm connected to an API.`;
+            // This is just a placeholder response
+            const aiResponse = `Aiko here! You said: "${message}". The new design with the red theme looks fantastic, especially with the local background image!`;
             appendMessage(aiResponse, 'ai');
         }
 
-        // Function to handle sending a message
         function sendMessage() {
             const message = userInput.value.trim();
             if (message) {
@@ -278,23 +331,15 @@
             }
         }
 
-        // Event listener for the send button
         sendBtn.addEventListener('click', sendMessage);
 
-        // Event listener for the Enter key on the input field
         userInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 sendMessage();
             }
         });
 
-        // Set initial focus on the input field
         userInput.focus();
-
-        // Welcome message with a slight delay
-        setTimeout(() => {
-            scrollToBottom();
-        }, 100);
     </script>
 
 </body>
